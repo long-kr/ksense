@@ -1,6 +1,6 @@
 // src/lib/api/type.ts
 
-import { ApiError } from "./util";
+import { ApiError } from "./helper";
 
 export enum HttpMethod {
 	GET = "GET",
@@ -25,54 +25,50 @@ export type FetcherOptions = {
 	cache?: RequestInit["cache"];
 };
 
-export type RequestOptions<TBody> = {
+export type RequestOptions<TBody> = Omit<RequestInit, "body"> & {
 	method?: HttpMethod;
 	path: string;
 	query?: Record<string, string | number | boolean | null | undefined>;
 	headers?: HeadersInit;
 	body?: TBody;
 	signal?: AbortSignal;
-	// If you want to skip JSON parsing (file downloads etc.)
-	responseType?: "json" | "text" | "blob";
+	responseType?: "json";
 };
 
 export type ApiResponse<T> = {
-	status: boolean;
 	data?: T;
 	error?: ApiError;
 };
 
 export type PaginatedPatientsResponse = {
-  data: Patient[]
-  pagination: Pagination
-  metadata: Metadata
-}
-
+	data: Patient[];
+	pagination: Pagination;
+	metadata: Metadata;
+};
 
 export type Patient = {
-  patient_id?: string
-  name?: string
-  age?: number
-  gender?: "M" | "F"
-  blood_pressure?: string
-  temperature?: number
-  visit_date?: string // ISO date string YYYY-MM-DD
-  diagnosis?: string
-  medications?: string
-}
+	patient_id?: string;
+	name?: string;
+	age?: number;
+	gender?: "M" | "F";
+	blood_pressure?: string;
+	temperature?: number;
+	visit_date?: string; // ISO date string YYYY-MM-DD
+	diagnosis?: string;
+	medications?: string;
+};
 
 export type Pagination = {
-  page?: number
-  lpage?: number
-  tpage?: number
-  totalPpage?: number
-  haspage?: boolean
-  hasPrevpage?: boolean
-}
+	page?: number;
+	limit?: number;
+	total?: number;
+	totalPages?: number;
+	hasNext?: boolean;
+	hasPrevious?: boolean;
+};
 
 export type Metadata = {
-  timestamp?: string // ISO datetime
-  version?: string
-  requestId?: string
-}
-
+	timestamp?: string; // ISO datetime
+	version?: string;
+	requestId?: string;
+};

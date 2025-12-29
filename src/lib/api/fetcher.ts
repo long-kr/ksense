@@ -25,13 +25,13 @@
 
 // src/lib/fetcher.ts
 
+import { ApiError, safeParseJson, withTimeout } from "./helper";
 import {
 	ApiErrorShape,
 	FetcherOptions,
 	HttpMethod,
 	RequestOptions,
 } from "./type";
-import { ApiError, safeParseJson, withTimeout } from "./util";
 
 export function createFetcher(config: FetcherOptions = {}) {
 	const baseUrl = config.baseUrl ?? process.env.KSENSE_BASE_URL ?? "";
