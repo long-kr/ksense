@@ -40,17 +40,19 @@ export type ApiResponse<T> = {
 	error?: ApiError;
 };
 
-export type PaginatedPatientsResponse = {
+export type PaginatedPatientsResponseV1 = {
 	data: Patient[];
 	pagination: Pagination;
 	metadata: Metadata;
 };
 
+type Gender = "M" | "F";
+
 export type Patient = {
 	patient_id?: string;
 	name?: string;
 	age?: number;
-	gender?: "M" | "F";
+	gender?: Gender;
 	blood_pressure?: string;
 	temperature?: number;
 	visit_date?: string; // ISO date string YYYY-MM-DD
@@ -71,4 +73,12 @@ export type Metadata = {
 	timestamp?: string; // ISO datetime
 	version?: string;
 	requestId?: string;
+};
+
+export type PaginatedPatientsResponseV2 = {
+	patients?: Patient[];
+	count?: number;
+	total_records?: number;
+	current_page?: number;
+	per_page?: number;
 };

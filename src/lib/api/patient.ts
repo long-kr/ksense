@@ -1,13 +1,20 @@
 import { api } from "./fetcher";
-import { PaginatedPatientsResponse, RequestOptions } from "./type";
+import {
+	PaginatedPatientsResponseV1,
+	PaginatedPatientsResponseV2,
+	RequestOptions,
+} from "./type";
 
 const PATH = "/patients";
 
 type GetPatientsOptions = Omit<RequestOptions<undefined>, "path">;
 
 export async function getPatients(options: GetPatientsOptions = {}) {
-	return api.get<PaginatedPatientsResponse>(PATH, {
-		cache: "no-store",
-		...options,
-	});
+	return api.get<PaginatedPatientsResponseV1 | PaginatedPatientsResponseV2>(
+		PATH,
+		{
+			cache: "default",
+			...options,
+		}
+	);
 }

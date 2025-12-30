@@ -13,9 +13,18 @@ export default async function PatientsPage({ searchParams }: Props) {
 	const searchParamsResolved = await searchParams;
 	const page = toInt(searchParamsResolved.page, 1);
 	const limit = toInt(searchParamsResolved.limit, 8);
-	const res = await getPatients({
-		query: { page, limit },
-	});
+
+	let res;
+
+	try {
+		res = await getPatients({
+			query: { page, limit },
+			cache: "no-store",
+		});
+	} catch (error) {
+		console.log("Error fetching patients:", error);
+	}
+	console.log(res);
 
 	return (
 		<div className='font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20'>

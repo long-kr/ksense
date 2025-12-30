@@ -20,7 +20,10 @@ export function cn(...inputs: ClassValue[]) {
  * ```
  */
 
-export function toInt(v: string | string[] | undefined, fallback: number) {
+export function toInt(
+	v: string | string[] | undefined | null,
+	fallback: number
+) {
 	const raw = Array.isArray(v) ? v[0] : v;
 	const n = Number(raw);
 	return Number.isFinite(n) && n > 0 ? Math.floor(n) : fallback;
