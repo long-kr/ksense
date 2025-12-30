@@ -39,7 +39,8 @@ export function createFetcher(config: FetcherOptions = {}) {
 	const defaultHeaders = config.headers;
 
 	async function request<TResponse, TBody = unknown>(
-		opts: RequestOptions<TBody>
+		opts: RequestOptions<TBody>,
+		retryCount = 3
 	): Promise<TResponse> {
 		const method = opts.method ?? "GET";
 
@@ -82,6 +83,21 @@ export function createFetcher(config: FetcherOptions = {}) {
 			});
 
 			if (!res.ok) {
+				console.log("res not ok", res.status);
+				if (retryCount > 0 && res.status === 429) {
+					// Handle rate limiting
+					console.log("rate limited, retrying...", retryCount);
+					await retryDelayCountDown(3000);
+					return request<TResponse, TBody>(opts, retryCount - 1);
+				}
+
+				if (retryCount > 0 && res.status >= 500) {
+					// Retry on server errors
+					console.log("res not ok, retrying...", retryCount);
+					await retryDelayCountDown(500);
+					return request<TResponse, TBody>(opts, retryCount - 1);
+				}
+
 				const data = await safeParseJson(res);
 				const message =
 					(data as ApiErrorShape | undefined)?.message ||
@@ -115,6 +131,9 @@ export function createFetcher(config: FetcherOptions = {}) {
 		) => request<T, B>({ ...opts, path, method: HttpMethod.PUT, body }),
 	};
 }
+
+const retryDelayCountDown = (delayMs: number) =>
+	new Promise((resolve) => setTimeout(resolve, delayMs));
 
 // Default instance (common case)
 export const api = createFetcher({

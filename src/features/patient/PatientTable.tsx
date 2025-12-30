@@ -25,8 +25,7 @@ type Props = {
 export function PatientTable({ patientsData }: Props) {
 	const searchParams = useSearchParams();
 
-	const { data, metadata, pagination, patients, total_records } =
-		patientsData || {};
+	const { data, pagination, patients, total_records } = patientsData || {};
 
 	const { hasNext, hasPrevious, total, totalPages } = pagination || {};
 
@@ -84,13 +83,7 @@ export function PatientTable({ patientsData }: Props) {
 	);
 
 	return (
-		<div className='pb-20 space-y-6 w-full'>
-			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full'>
-				{safeData?.map((patient) => (
-					<PatientCard key={patient.patient_id} patient={patient} />
-				))}
-			</div>
-
+		<div className='w-full flex flex-col gap-6'>
 			<Pagination>
 				<PaginationContent>
 					<PaginationItem>
@@ -104,6 +97,12 @@ export function PatientTable({ patientsData }: Props) {
 					</PaginationItem>
 				</PaginationContent>
 			</Pagination>
+
+			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full'>
+				{safeData?.map((patient) => (
+					<PatientCard key={patient.patient_id} patient={patient} />
+				))}
+			</div>
 		</div>
 	);
 }
