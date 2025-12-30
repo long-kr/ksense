@@ -3,20 +3,24 @@
 // components/patient-card.tsx
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Patient } from "@/lib/api/type";
+import clsx from "clsx";
+import { Patient } from "./type";
+import { getAlert } from "./utils";
 
 type Props = {
 	patient: Patient;
 };
 
 export function PatientCard({ patient }: Props) {
+	const alerts = getAlert(patient);
+
 	return (
-		<Card className='w-full max-w-md'>
+		<Card className='w-full max-w-md min-h-108'>
 			<CardHeader className='space-y-1'>
-				<CardTitle className='flex items-center justify-between'>
-					<span>{patient.name}</span>
-					<Badge variant='outline'>{patient.patient_id}</Badge>
-				</CardTitle>
+				<CardTitle>{patient.name}</CardTitle>
+
+				<Badge variant='outline'>{patient.patient_id}</Badge>
+
 				<p className='text-sm text-muted-foreground'>
 					Visit date: {patient.visit_date}
 				</p>
@@ -40,6 +44,27 @@ export function PatientCard({ patient }: Props) {
 				<div className='space-y-1'>
 					<p className='text-sm font-medium'>Medications</p>
 					<p className='text-sm text-muted-foreground'>{patient.medications}</p>
+				</div>
+			</CardContent>
+
+			<CardContent className='text-sm flex flex-col gap-2'>
+				<CardTitle>Risk Summary</CardTitle>
+
+				<div className='flex gap-2'>
+					{alerts.map((alert) => (
+						<Badge
+							key={alert}
+							className={clsx(
+								alert === "invalid"
+									? "bg-gray-100 text-gray-700"
+									: "bg-red-100 text-red-700"
+							)}
+						>
+							{alert === "invalid"
+								? "Invalid Data"
+								: alert.replaceAll("_", " ").toUpperCase()}
+						</Badge>
+					))}
 				</div>
 			</CardContent>
 		</Card>

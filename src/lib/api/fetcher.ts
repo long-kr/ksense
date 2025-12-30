@@ -135,7 +135,6 @@ export function createFetcher(config: FetcherOptions = {}) {
 const retryDelayCountDown = (delayMs: number) =>
 	new Promise((resolve) => setTimeout(resolve, delayMs));
 
-// Default instance (common case)
 export const api = createFetcher({
 	timeoutMs: 15 * 1000,
 	headers: {

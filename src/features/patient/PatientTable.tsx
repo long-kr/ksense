@@ -9,14 +9,14 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
+import { useSearchParams } from "next/navigation";
+import { useCallback } from "react";
+import { PatientCard } from "./PatientCard";
 import {
 	PaginatedPatientsResponseV1,
 	PaginatedPatientsResponseV2,
 	Patient,
-} from "@/lib/api/type";
-import { useSearchParams } from "next/navigation";
-import { useCallback } from "react";
-import { PatientCard } from "./PatientCard";
+} from "./type";
 
 type Props = {
 	patientsData?: PaginatedPatientsResponseV1 | PaginatedPatientsResponseV2;
@@ -25,6 +25,7 @@ type Props = {
 export function PatientTable({ patientsData }: Props) {
 	const searchParams = useSearchParams();
 
+	/* @ts-expect-error: inconsistent data from api */
 	const { data, pagination, patients, total_records } = patientsData || {};
 
 	const { hasNext, hasPrevious, total, totalPages } = pagination || {};
@@ -100,7 +101,9 @@ export function PatientTable({ patientsData }: Props) {
 
 			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full'>
 				{safeData?.map((patient) => (
-					<PatientCard key={patient.patient_id} patient={patient} />
+					<div key={patient.patient_id} className='space-y-4'>
+						<PatientCard key={patient.patient_id} patient={patient} />
+					</div>
 				))}
 			</div>
 		</div>
